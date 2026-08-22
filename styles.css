@@ -699,6 +699,268 @@ a:hover { color: var(--maroon); }
 }
 
 /* =========================================================
+   Process — timeline whose connecting line draws across
+   ========================================================= */
+.process{ padding-bottom: clamp(90px, 12vw, 150px); }
+.process .wrap{ display: flex; flex-direction: column; gap: clamp(40px, 5vw, 64px); }
+
+.steps{ position: relative; }
+
+/* Spans first node centre to last node centre: with 4 equal columns and a
+   30px gap, each column is (25% - 22.5px) wide and the node centre sits
+   27px in — so the right inset is (column width - 27px). */
+.steps__line{
+  position: absolute;
+  left: 27px;
+  right: calc(25% - 49.5px);
+  top: 27px;
+  height: 1px;
+  background: var(--paper-edge);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.8s var(--ease) 0.15s;
+}
+.steps.is-visible .steps__line{ transform: scaleX(1); }
+
+.steps__list{
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.step{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+.steps.is-visible .step{ opacity: 1; transform: none; }
+.steps.is-visible .step:nth-child(1){ transition-delay: 0.30s; }
+.steps.is-visible .step:nth-child(2){ transition-delay: 0.55s; }
+.steps.is-visible .step:nth-child(3){ transition-delay: 0.80s; }
+.steps.is-visible .step:nth-child(4){ transition-delay: 1.05s; }
+
+/* Icons draw once their step has arrived */
+.steps.is-visible .step:nth-child(1) .draw{ transition-delay: 0.55s; }
+.steps.is-visible .step:nth-child(2) .draw{ transition-delay: 0.80s; }
+.steps.is-visible .step:nth-child(3) .draw{ transition-delay: 1.05s; }
+.steps.is-visible .step:nth-child(4) .draw{ transition-delay: 1.30s; }
+
+.step__dot{
+  display: grid;
+  place-items: center;
+  width: 54px; height: 54px;
+  border: 1px solid var(--paper-edge);
+  border-radius: 50%;
+  background: var(--paper);   /* masks the line behind each node */
+}
+.step__icon{
+  width: 26px; height: 26px;
+  stroke: var(--sky-deep);
+  stroke-width: 1.5;
+}
+.step__num{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--sky-deep);
+  margin-top: 4px;
+}
+.step__title{ font-size: clamp(19px, 2vw, 22px); color: var(--maroon); }
+.step__body{ font-size: 15px; line-height: 1.6; color: var(--muted); }
+
+/* =========================================================
+   About
+   ========================================================= */
+.about{ padding: clamp(90px, 12vw, 140px) 0; }
+.about__grid{
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(36px, 5vw, 68px);
+  align-items: center;
+}
+
+.portrait{
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  aspect-ratio: 4 / 5;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+  overflow: hidden;
+}
+/* Frame wipes away to reveal the portrait area */
+.portrait__mask{
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: var(--paper);
+  transform: scaleY(1);
+  transform-origin: top center;
+  transition: transform 1.3s var(--ease) 0.1s;
+}
+.about__portrait.is-visible .portrait__mask{ transform: scaleY(0); }
+
+.portrait__glyph{
+  width: 42%;
+  stroke: var(--sky-deep);
+  stroke-width: 2;
+  opacity: 0.45;
+}
+.portrait__note{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  text-align: center;
+  padding-inline: 20px;
+}
+
+.about__copy{ display: flex; flex-direction: column; gap: 18px; }
+.about__body{ max-width: 56ch; font-size: 16px; line-height: 1.75; color: var(--muted); }
+
+/* =========================================================
+   Selected work
+   ========================================================= */
+.work{ padding-bottom: clamp(90px, 12vw, 150px); }
+.work .wrap{ display: flex; flex-direction: column; gap: clamp(40px, 5vw, 60px); }
+
+.work__grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.work-card{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(26px, 3vw, 34px);
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.6s var(--ease),
+              box-shadow 0.6s var(--ease),
+              opacity 1s var(--ease);
+}
+/* A sky wash rises from the bottom on hover */
+.work-card::before{
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(168, 200, 220, 0.28), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+  pointer-events: none;
+}
+.work-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -40px rgba(42, 12, 19, 0.55);
+}
+.work-card:hover::before{ opacity: 1; }
+.work-card > *{ position: relative; z-index: 1; }
+
+.work-card__index{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--sky-deep);
+}
+.work-card__sector{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.work-card__title{ font-size: clamp(20px, 2.2vw, 24px); color: var(--maroon); }
+.work-card__outcome{
+  flex-grow: 1;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.work__note{ max-width: 60ch; font-size: 14.5px; color: var(--muted); }
+
+/* =========================================================
+   FAQ — accordion
+   ========================================================= */
+.faq{ padding-bottom: clamp(90px, 12vw, 140px); }
+.faq__inner{ display: flex; flex-direction: column; gap: clamp(34px, 4vw, 48px); }
+
+.faq__list{
+  border-top: 1px solid var(--paper-edge);
+  max-width: 860px;
+}
+.faq__item{ border-bottom: 1px solid var(--paper-edge); }
+.faq__item h3{ margin: 0; font-family: var(--sans); }
+
+.faq__q{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  min-height: 64px;
+  padding: 20px 0;
+  background: none;
+  border: 0;
+  font-family: var(--serif);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--maroon);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s var(--ease-soft);
+}
+.faq__q:hover{ color: var(--maroon-lift); }
+
+.faq__chev{
+  flex: none;
+  width: 18px; height: 18px;
+  fill: none;
+  stroke: var(--sky-deep);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.5s var(--ease);
+}
+.faq__item.is-open .faq__chev{ transform: rotate(180deg); }
+
+/* Height animation via grid rows — no JS measuring needed */
+.faq__panel{
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--ease);
+}
+.faq__item.is-open .faq__panel{ grid-template-rows: 1fr; }
+.faq__panel > div{ overflow: hidden; }
+.faq__panel p{
+  max-width: 64ch;
+  padding-bottom: 24px;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.faq__note{
+  max-width: 60ch;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+/* =========================================================
    Approach — full-bleed colour wipe + parallax
    ========================================================= */
 .approach{
@@ -966,6 +1228,20 @@ a:hover { color: var(--maroon); }
   .cards{ grid-template-columns: 1fr; }
   .contact__panel{ grid-template-columns: 1fr; }
   .footer__contact{ text-align: left; }
+
+  /* Timeline turns vertical; the line runs down through the nodes */
+  .steps__list{ grid-template-columns: 1fr; gap: 34px; }
+  .steps__line{
+    left: 27px; right: auto; top: 0; bottom: 0;
+    width: 1px; height: auto;
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+  .steps.is-visible .steps__line{ transform: scaleY(1); }
+
+  .about__grid{ grid-template-columns: 1fr; }
+  .portrait{ aspect-ratio: 3 / 2; }
+  .work__grid{ grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px){
@@ -1006,4 +1282,11 @@ a:hover { color: var(--maroon); }
   .orbit__ring{ animation: none; }
   .orbit__node{ animation: none; opacity: 0.85; }
   .orbit__hub-pulse, .orbit__comet{ display: none; }
+
+  .steps__line{ transform: scaleX(1); }
+  .step{ opacity: 1; transform: none; }
+  .portrait__mask{ transform: scaleY(0); }
+  .work-card:hover{ transform: none; }
+  /* The accordion still needs to open — keep that one transition usable */
+  .faq__panel{ transition-duration: 0.2s !important; }
 }

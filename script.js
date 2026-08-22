@@ -131,7 +131,29 @@
   }
 
   /* -------------------------------------------------------
-     6. Lead form — validation, then a drawn success mark
+     6. FAQ accordion — one panel open at a time
+     ------------------------------------------------------- */
+  var faqButtons = document.querySelectorAll('.faq__q');
+
+  faqButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.faq__item');
+      var isOpen = item.classList.contains('is-open');
+
+      // Close whatever else is open, so the section never sprawls.
+      document.querySelectorAll('.faq__item.is-open').forEach(function (other) {
+        if (other === item) return;
+        other.classList.remove('is-open');
+        other.querySelector('.faq__q').setAttribute('aria-expanded', 'false');
+      });
+
+      item.classList.toggle('is-open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  /* -------------------------------------------------------
+     7. Lead form — validation, then a drawn success mark
      ------------------------------------------------------- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
@@ -215,7 +237,7 @@
   }
 
   /* -------------------------------------------------------
-     7. Footer year
+     8. Footer year
      ------------------------------------------------------- */
   var year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());
