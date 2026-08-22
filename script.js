@@ -58,20 +58,18 @@
   /* -------------------------------------------------------
      3. Hero entrance — staggered, on load
      ------------------------------------------------------- */
-  window.addEventListener('load', function () {
-    ['.hero__eyebrow', '.hero__title', '.hero__lede', '.hero__actions'].forEach(function (sel) {
-      var el = document.querySelector(sel);
-      if (el) el.classList.add('is-visible');
-    });
-  });
+  var HERO_REVEAL_SELECTORS = ['.hero__eyebrow', '.hero__title', '.hero__lede', '.hero__actions', '.orbit'];
 
-  // Fallback in case `load` has already fired (cached assets).
-  setTimeout(function () {
-    ['.hero__eyebrow', '.hero__title', '.hero__lede', '.hero__actions'].forEach(function (sel) {
+  function revealHero() {
+    HERO_REVEAL_SELECTORS.forEach(function (sel) {
       var el = document.querySelector(sel);
       if (el) el.classList.add('is-visible');
     });
-  }, 400);
+  }
+
+  window.addEventListener('load', revealHero);
+  // Fallback in case `load` has already fired (cached assets).
+  setTimeout(revealHero, 400);
 
   /* -------------------------------------------------------
      4. Scroll reveal — sections rise and their icons draw
