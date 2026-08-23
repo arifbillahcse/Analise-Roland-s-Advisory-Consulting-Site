@@ -1,68 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Analise Roland — Strategic Advisory</title>
-<meta name="description" content="Analise Roland advises early-stage startups and institutional allocators — from first hire to first close — with the rigor of a consultant and the instincts of a co-founder.">
+@extends('layouts.app')
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Analise Roland — Strategic Advisory">
-<meta property="og:description" content="The strategic partner behind founders, funds, and endowments who move first.">
-<meta name="twitter:card" content="summary_large_image">
+@section('title', 'Analise Roland — Strategic Advisory')
+@section('description', 'Analise Roland advises early-stage startups and institutional allocators — from first hire to first close — with the rigor of a consultant and the instincts of a co-founder.')
+@section('og_title', 'Analise Roland — Strategic Advisory')
+@section('og_description', 'The strategic partner behind founders, funds, and endowments who move first.')
+@section('wa_text', 'Hi%20Analise%20%E2%80%94%20I%20came%20across%20your%20site%20and%20I%27d%20like%20to%20talk%20about%20an%20engagement.')
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%234A1520'/><text x='16' y='23' font-family='Georgia,serif' font-size='19' fill='%23FAF7F2' text-anchor='middle'>A</text></svg>">
-</head>
-<body>
-
-<a class="skip-link" href="#main">Skip to content</a>
-
-<!-- ================= NAV ================= -->
-<header class="nav" id="nav">
-  <div class="nav__inner">
-    <a class="logo" href="index.html" aria-label="Analise Roland — home">
-      <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
-        <path class="draw" pathLength="1" d="M6 32 L20 8 L34 32" />
-        <path class="draw draw--d2" pathLength="1" d="M12 24 L28 24" />
-      </svg>
-      <span class="logo__type">Analise Roland</span>
-    </a>
-
-    <nav class="nav__links" aria-label="Primary">
-      <a href="index.html" aria-current="page">Home</a>
-      <a href="services.html">Services</a>
-      <a href="case-studies.html">Case Studies</a>
-      <a href="testimonials.html">Testimonials</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-
-    <a class="btn btn--solid btn--sm nav__cta" href="tel:+8801779440297">
-      <span>Book a Call</span>
-      <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
-        <path d="M0 6h17M12 1l5 5-5 5" />
-      </svg>
-    </a>
-
-    <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span>
-    </button>
-  </div>
-
-  <div class="nav__mobile" id="navMobile">
-    <a href="index.html" aria-current="page">Home</a>
-    <a href="services.html">Services</a>
-    <a href="case-studies.html">Case Studies</a>
-    <a href="testimonials.html">Testimonials</a>
-    <a href="contact.html">Contact</a>
-    <a class="btn btn--solid" href="tel:+8801779440297"><span>Book a Call</span></a>
-  </div>
-</header>
-
-<main id="main">
+@section('content')
 
   <!-- ================= HERO ================= -->
   <section class="hero">
@@ -195,7 +139,7 @@
 
           <footer class="card__foot">
             <p class="card__price">Starting at <strong>$20,000</strong> base</p>
-            <a class="link-arrow" href="services.html#retainer">
+            <a class="link-arrow" href="{{ route('services') }}#retainer">
               <span>Discuss terms</span>
               <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
                 <path d="M0 6h17M12 1l5 5-5 5" />
@@ -239,7 +183,7 @@
 
           <footer class="card__foot">
             <p class="card__price">Scoped per project</p>
-            <a class="link-arrow" href="services.html#project">
+            <a class="link-arrow" href="{{ route('services') }}#project">
               <span>Discuss your project</span>
               <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
                 <path d="M0 6h17M12 1l5 5-5 5" />
@@ -252,7 +196,7 @@
 
       <p class="services__note reveal">
         Every engagement is structured to the client. The figures above are a starting point,
-        not a menu — <a href="services.html#pricing">detailed pricing is shared privately</a>.
+        not a menu — <a href="{{ route('services') }}#pricing">detailed pricing is shared privately</a>.
       </p>
     </div>
   </section>
@@ -405,7 +349,7 @@
           <p class="work-card__sector">[Sector / stage]</p>
           <h3 class="work-card__title">[Engagement title]</h3>
           <p class="work-card__outcome">[One sentence on the outcome — the number, the raise, the hire, the exit.]</p>
-          <a class="link-arrow" href="case-studies.html">
+          <a class="link-arrow" href="{{ route('case-studies') }}">
             <span>Read the case study</span>
             <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
               <path d="M0 6h17M12 1l5 5-5 5" />
@@ -418,7 +362,7 @@
           <p class="work-card__sector">[Sector / stage]</p>
           <h3 class="work-card__title">[Engagement title]</h3>
           <p class="work-card__outcome">[One sentence on the outcome — the number, the raise, the hire, the exit.]</p>
-          <a class="link-arrow" href="case-studies.html">
+          <a class="link-arrow" href="{{ route('case-studies') }}">
             <span>Read the case study</span>
             <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
               <path d="M0 6h17M12 1l5 5-5 5" />
@@ -431,7 +375,7 @@
           <p class="work-card__sector">[Sector / stage]</p>
           <h3 class="work-card__title">[Engagement title]</h3>
           <p class="work-card__outcome">[One sentence on the outcome — the number, the raise, the hire, the exit.]</p>
-          <a class="link-arrow" href="case-studies.html">
+          <a class="link-arrow" href="{{ route('case-studies') }}">
             <span>Read the case study</span>
             <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
               <path d="M0 6h17M12 1l5 5-5 5" />
@@ -572,7 +516,7 @@
 
           <div class="contact__cal">
             <p class="contact__cal-label">Prefer to book directly?</p>
-            <a class="link-arrow" href="contact.html#book">
+            <a class="link-arrow" href="{{ route('contact') }}#book">
               <span>Open the calendar</span>
               <svg class="arrow" viewBox="0 0 20 12" aria-hidden="true">
                 <path d="M0 6h17M12 1l5 5-5 5" />
@@ -647,69 +591,4 @@
     </div>
   </section>
 
-</main>
-
-<!-- ================= FOOTER ================= -->
-<footer class="footer">
-  <div class="wrap">
-    <div class="footer__top">
-      <a class="logo logo--footer" href="index.html">
-        <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
-          <path pathLength="1" d="M6 32 L20 8 L34 32" />
-          <path pathLength="1" d="M12 24 L28 24" />
-        </svg>
-        <span class="logo__type">Analise Roland</span>
-      </a>
-
-      <nav class="footer__links" aria-label="Footer">
-        <a href="index.html">Home</a>
-        <a href="services.html">Services</a>
-        <a href="case-studies.html">Case Studies</a>
-        <a href="testimonials.html">Testimonials</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-
-      <address class="footer__contact">
-        <a href="#">[hello@analiseroland.com]</a><br>
-        [City, State]
-      </address>
-    </div>
-
-    <p class="footer__legal">
-      [Analise Roland Advisory is not a registered broker-dealer or investment adviser.
-      Nothing on this site constitutes an offer to sell, a solicitation of an offer to buy any
-      security, or financial, legal, or investment advice. — Final legal language pending
-      client's counsel.]
-    </p>
-
-    <p class="footer__copy">© <span id="year">2026</span> Analise Roland. All rights reserved.</p>
-  </div>
-</footer>
-
-<!-- =========================================================
-     WHATSAPP FLOATING BUTTON  (link 2 of 2)
-
-     TO GO LIVE, replace 15550000000 in BOTH wa.me links with
-     Analise's real WhatsApp number:
-       - international format, digits only
-       - no +, no spaces, no dashes
-       e.g. US number +1 (415) 555-0142  ->  14155550142
-
-     The ?text= part is the message already typed into WhatsApp for
-     the prospect; edit the wording there (URL-encoded) if she wants
-     it to say something else.
-     ========================================================= -->
-<a class="wa" id="waFloat"
-   href="https://wa.me/15550000000?text=Hi%20Analise%20%E2%80%94%20I%20came%20across%20your%20site%20and%20I%27d%20like%20to%20talk%20about%20an%20engagement."
-   target="_blank" rel="noopener noreferrer"
-   aria-label="Message Analise on WhatsApp">
-  <span class="wa__ping" aria-hidden="true"></span>
-  <svg class="wa__icon" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-  </svg>
-  <span class="wa__label">Message on WhatsApp</span>
-</a>
-
-<script src="script.js"></script>
-</body>
-</html>
+@endsection
