@@ -107,6 +107,7 @@
 
       <div class="carousel reveal" id="carousel" aria-roledescription="carousel"
            aria-label="Featured testimonials">
+        <div class="carousel__main">
         <div class="carousel__track" aria-live="polite">
 
           <figure class="slide is-active" data-slide="0">
@@ -119,10 +120,6 @@
                  months later that sentence is our homepage. I'd worked with three other advisors
                  before her and none of them got us there.</p>
             </blockquote>
-            <figcaption>
-              <span class="slide__name">Founder &amp; CEO</span>
-              <span class="slide__role">Consumer fintech · Seed to Series A</span>
-            </figcaption>
           </figure>
 
           <figure class="slide" data-slide="1" hidden>
@@ -135,10 +132,6 @@
                  we'd have to defend line by line. Analise wrote the framework, sat through the
                  questions, and it passed unanimously the first time.</p>
             </blockquote>
-            <figcaption>
-              <span class="slide__name">Director of Investments</span>
-              <span class="slide__role">University endowment program</span>
-            </figcaption>
           </figure>
 
           <figure class="slide" data-slide="2" hidden>
@@ -151,26 +144,33 @@
                  shouldn't exist before she started filling them. We broke ground on schedule
                  because of it.</p>
             </blockquote>
-            <figcaption>
-              <span class="slide__name">Managing Partner</span>
-              <span class="slide__role">Real estate development</span>
-            </figcaption>
           </figure>
 
         </div>
 
-        <div class="carousel__dots" role="tablist" aria-label="Choose a testimonial">
-          <button class="dot is-active" type="button" role="tab" aria-selected="true"
-                  aria-label="Testimonial 1 of 3" data-goto="0">
-            <span class="dot__fill"></span>
+        </div>
+
+        <div class="carousel__nav" role="tablist" aria-label="Choose a testimonial">
+          <button class="dot is-active" type="button" role="tab" aria-selected="true" data-goto="0">
+            <span class="dot__meta">
+              <span class="dot__name">Founder &amp; CEO</span>
+              <span class="dot__role">Consumer fintech · Seed to Series A</span>
+            </span>
+            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
           </button>
-          <button class="dot" type="button" role="tab" aria-selected="false"
-                  aria-label="Testimonial 2 of 3" data-goto="1">
-            <span class="dot__fill"></span>
+          <button class="dot" type="button" role="tab" aria-selected="false" data-goto="1">
+            <span class="dot__meta">
+              <span class="dot__name">Director of Investments</span>
+              <span class="dot__role">University endowment program</span>
+            </span>
+            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
           </button>
-          <button class="dot" type="button" role="tab" aria-selected="false"
-                  aria-label="Testimonial 3 of 3" data-goto="2">
-            <span class="dot__fill"></span>
+          <button class="dot" type="button" role="tab" aria-selected="false" data-goto="2">
+            <span class="dot__meta">
+              <span class="dot__name">Managing Partner</span>
+              <span class="dot__role">Real estate development</span>
+            </span>
+            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
           </button>
         </div>
       </div>
