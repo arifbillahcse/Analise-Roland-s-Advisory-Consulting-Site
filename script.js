@@ -26,9 +26,16 @@
      ------------------------------------------------------- */
   var nav = document.getElementById('nav');
   var navToggle = document.getElementById('navToggle');
+  var waFloat = document.getElementById('waFloat');
 
   function onScroll() {
     nav.classList.toggle('is-stuck', window.scrollY > 24);
+
+    // Hold the WhatsApp button back until the hero is behind them, so it
+    // never competes with the hero's own call to action.
+    if (waFloat) {
+      waFloat.classList.toggle('is-shown', window.scrollY > window.innerHeight * 0.6);
+    }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

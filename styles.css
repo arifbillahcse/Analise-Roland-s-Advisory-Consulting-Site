@@ -1172,6 +1172,101 @@ a:hover { color: var(--maroon); }
 .form-success.is-drawn .success-mark__check{ stroke-dashoffset: 0; }
 
 /* =========================================================
+   WhatsApp — inline link + floating click-to-chat button
+   ========================================================= */
+:root{ --wa: #25D366; --wa-deep: #128C7E; }
+
+.wa-inline{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--wa-deep);
+  transition: color 0.3s var(--ease-soft);
+}
+.wa-inline:hover{ color: var(--maroon); }
+.wa-inline__icon{
+  width: 17px; height: 17px;
+  fill: currentColor;
+  transition: transform 0.4s var(--ease);
+}
+.wa-inline:hover .wa-inline__icon{ transform: scale(1.12); }
+
+/* ---------- Floating button ---------- */
+.wa{
+  position: fixed;
+  right: clamp(16px, 3vw, 34px);
+  bottom: clamp(16px, 3vw, 34px);
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  height: 58px;
+  padding: 0 17px;
+  border-radius: 999px;
+  background: var(--wa);
+  color: #FFFFFF;
+  box-shadow: 0 16px 34px -14px rgba(18, 140, 126, 0.75),
+              0 4px 14px rgba(42, 12, 19, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(22px) scale(0.9);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease),
+              visibility 0s linear 0.6s, box-shadow 0.4s var(--ease);
+}
+.wa.is-shown{
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease),
+              visibility 0s, box-shadow 0.4s var(--ease);
+}
+.wa:hover{
+  color: #FFFFFF;
+  box-shadow: 0 20px 40px -14px rgba(18, 140, 126, 0.85),
+              0 4px 14px rgba(42, 12, 19, 0.2);
+}
+
+.wa__icon{
+  position: relative;
+  z-index: 2;
+  flex: none;
+  width: 26px; height: 26px;
+  fill: currentColor;
+}
+
+/* Label slides open on hover, so it sits quiet until wanted */
+.wa__label{
+  position: relative;
+  z-index: 2;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: max-width 0.55s var(--ease), margin-left 0.55s var(--ease);
+}
+.wa:hover .wa__label,
+.wa:focus-visible .wa__label{ max-width: 220px; margin-left: 11px; }
+
+/* Continuous ring, same pulse language as the hero orbit hub */
+.wa__ping{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 999px;
+  border: 2px solid var(--wa);
+  animation: waPing 2.8s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes waPing{
+  0%   { transform: scale(1);    opacity: 0.6; }
+  100% { transform: scale(1.45); opacity: 0; }
+}
+
+/* =========================================================
    Footer
    ========================================================= */
 .footer{
@@ -1254,6 +1349,10 @@ a:hover { color: var(--maroon); }
   .btn--ghost{ width: auto; align-self: flex-start; justify-content: flex-start; }
   .card__foot{ flex-direction: column; align-items: flex-start; }
   .footer__top{ flex-direction: column; gap: 24px; }
+
+  /* Icon-only circle on phones — hover can't be relied on for the label */
+  .wa{ width: 56px; height: 56px; padding: 0; justify-content: center; }
+  .wa__label{ display: none; }
 }
 
 /* =========================================================
@@ -1289,4 +1388,7 @@ a:hover { color: var(--maroon); }
   .work-card:hover{ transform: none; }
   /* The accordion still needs to open — keep that one transition usable */
   .faq__panel{ transition-duration: 0.2s !important; }
+
+  .wa__ping{ animation: none; opacity: 0; }
+  .wa{ transform: none; }
 }
