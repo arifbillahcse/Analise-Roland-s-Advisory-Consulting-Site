@@ -1507,6 +1507,33 @@ a:hover { color: var(--maroon); }
    CASE STUDIES PAGE
    ========================================================= */
 
+/* ---------- Sample-content notice (remove with the sample data) ---------- */
+.sample-notice{
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  background: rgba(201, 162, 39, 0.09);
+  border: 1px dashed #B08A2E;
+  border-radius: 4px;
+}
+.sample-notice__icon{
+  flex: none;
+  width: 19px; height: 19px;
+  margin-top: 1px;
+  fill: none;
+  stroke: #8A6A1E;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+.sample-notice p{
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #6E5518;
+  max-width: 92ch;
+}
+.sample-notice strong{ font-weight: 600; }
+
 /* ---------- Tags ---------- */
 .tag{
   display: inline-block;
