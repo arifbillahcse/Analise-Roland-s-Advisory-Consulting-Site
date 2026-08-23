@@ -201,7 +201,73 @@
   }
 
   /* -------------------------------------------------------
-     8. Lead form — validation, then a drawn success mark
+     8. Testimonial carousel
+        Auto-advances, pauses on hover/focus, and stays put
+        entirely when the visitor has asked for less motion.
+     ------------------------------------------------------- */
+  var carousel = document.getElementById('carousel');
+
+  if (carousel) {
+    var slides = carousel.querySelectorAll('.slide');
+    var dots = carousel.querySelectorAll('.dot');
+    var SLIDE_MS = 7000;
+    var current = 0;
+    var timer = null;
+
+    function show(next) {
+      slides[current].classList.remove('is-active');
+      slides[current].hidden = true;
+      dots[current].classList.remove('is-active');
+      dots[current].setAttribute('aria-selected', 'false');
+
+      current = (next + slides.length) % slides.length;
+
+      slides[current].hidden = false;
+      slides[current].classList.add('is-active');
+      dots[current].classList.add('is-active');
+      dots[current].setAttribute('aria-selected', 'true');
+    }
+
+    function start() {
+      if (reduceMotion) return;
+      stop();
+      timer = setInterval(function () { show(current + 1); }, SLIDE_MS);
+    }
+    function stop() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    dots.forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        show(parseInt(dot.dataset.goto, 10));
+        start();
+      });
+    });
+
+    // Pause while someone is reading or tabbing through.
+    ['mouseenter', 'focusin'].forEach(function (evt) {
+      carousel.addEventListener(evt, function () {
+        stop();
+        carousel.querySelector('.dot.is-active').classList.add('is-paused');
+      });
+    });
+    ['mouseleave', 'focusout'].forEach(function (evt) {
+      carousel.addEventListener(evt, function () {
+        carousel.querySelector('.dot.is-active').classList.remove('is-paused');
+        start();
+      });
+    });
+
+    // Don't run the timer for a tab nobody is looking at.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+
+    start();
+  }
+
+  /* -------------------------------------------------------
+     9. Lead form — validation, then a drawn success mark
      ------------------------------------------------------- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
@@ -285,7 +351,7 @@
   }
 
   /* -------------------------------------------------------
-     8. Footer year
+     10. Footer year
      ------------------------------------------------------- */
   var year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());
