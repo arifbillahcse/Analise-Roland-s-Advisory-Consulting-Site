@@ -1504,6 +1504,291 @@ a:hover { color: var(--maroon); }
 .btn--ghost-light:hover{ color: var(--sky); }
 
 /* =========================================================
+   CASE STUDIES PAGE
+   ========================================================= */
+
+/* ---------- Tags ---------- */
+.tag{
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.tag--advisory{ background: rgba(62, 110, 142, 0.12); color: var(--sky-deep); }
+.tag--project{ background: rgba(74, 21, 32, 0.09); color: var(--maroon); }
+.tag--institutional{ background: rgba(107, 91, 96, 0.12); color: var(--muted); }
+
+/* ---------- Filters ---------- */
+.cases{ padding: clamp(30px, 4vw, 50px) 0 clamp(80px, 10vw, 120px); }
+.cases .wrap{ display: flex; flex-direction: column; gap: clamp(30px, 4vw, 44px); }
+
+.filters{ display: flex; flex-wrap: wrap; gap: 10px; }
+.filter{
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--paper-edge);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.4s var(--ease-soft), color 0.4s var(--ease-soft),
+              border-color 0.4s var(--ease-soft), transform 0.4s var(--ease);
+}
+.filter:hover{ color: var(--maroon); border-color: var(--maroon); }
+.filter.is-active{
+  background: var(--maroon);
+  border-color: var(--maroon);
+  color: var(--on-dark);
+}
+.filter__count{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  opacity: 0.7;
+}
+
+/* ---------- Case grid ---------- */
+.cases__grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.case-card{
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: clamp(24px, 2.8vw, 32px);
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+  transition: transform 0.6s var(--ease),
+              box-shadow 0.6s var(--ease),
+              opacity 0.5s var(--ease);
+}
+.case-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -40px rgba(42, 12, 19, 0.55);
+}
+
+/* Filtered-out cards collapse out of the grid */
+.case-card.is-filtered{
+  display: none;
+}
+.case-card.is-entering{
+  animation: caseIn 0.55s var(--ease) both;
+}
+@keyframes caseIn{
+  from{ opacity: 0; transform: translateY(16px) scale(0.98); }
+  to{ opacity: 1; transform: none; }
+}
+
+.case-card__top{ display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.case-card__index{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--sky-deep);
+}
+.case-card__sector{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.case-card__title{
+  font-family: var(--serif);
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--maroon);
+}
+.case-card__outcome{ flex-grow: 1; font-size: 15px; line-height: 1.6; color: var(--muted); }
+.case-card__foot{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-edge);
+}
+.case-card__meta{ font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+.cases__empty{ font-size: 15px; color: var(--muted); }
+
+/* ---------- Anatomy / template ---------- */
+.anatomy{ padding-bottom: clamp(80px, 10vw, 120px); }
+.anatomy .wrap{ display: flex; flex-direction: column; gap: clamp(34px, 4vw, 48px); }
+.anatomy__lede{ max-width: 58ch; font-size: 16px; line-height: 1.7; color: var(--muted); margin-top: 4px; }
+
+.study{
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 3.5vw, 40px);
+  padding: clamp(28px, 4vw, 56px);
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-edge);
+  border-radius: 6px;
+}
+.study__head{ display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.study__title{
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--maroon);
+  max-width: 22ch;
+}
+
+.study__meta{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--paper-edge);
+  border: 1px solid var(--paper-edge);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.study__meta > div{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  background: var(--paper);
+}
+.study__meta dt{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.study__meta dd{ margin: 0; font-size: 14.5px; color: var(--ink); }
+
+/* Three-beat arc, same connecting-line language as the homepage process */
+.study__arc{ position: relative; }
+.study__line{
+  position: absolute;
+  left: 15px;
+  right: calc(33.333% - 30px);
+  top: 15px;
+  height: 1px;
+  background: var(--paper-edge);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.6s var(--ease) 0.2s;
+}
+.study.is-visible .study__line,
+.anatomy .reveal.is-visible .study__line{ transform: scaleX(1); }
+
+.study__steps{
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+.study__step{ display: flex; flex-direction: column; align-items: flex-start; gap: 11px; }
+.study__num{
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  border: 1px solid var(--paper-edge);
+  border-radius: 50%;
+  background: var(--paper-deep);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--sky-deep);
+}
+.study__step h4{
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--maroon);
+}
+.study__step p{ font-size: 14.5px; line-height: 1.65; color: var(--muted); }
+
+.study__metrics{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: clamp(22px, 2.6vw, 30px) 0;
+  border-block: 1px solid var(--paper-edge);
+}
+.metric{ display: flex; flex-direction: column; gap: 7px; }
+.metric__value{
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.6vw, 42px);
+  line-height: 1;
+  color: var(--maroon);
+  font-variant-numeric: tabular-nums;
+}
+.metric__label{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.study__quote{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  max-width: 64ch;
+}
+.study__quote .quote{ width: 32px; height: 24px; }
+.study__quote p{
+  font-family: var(--serif);
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.45;
+  color: var(--maroon);
+}
+.study__quote footer{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Confidentiality ---------- */
+.confidential{ padding-bottom: clamp(80px, 10vw, 120px); }
+.confidential__inner{
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(20px, 3vw, 34px);
+  padding: clamp(26px, 3.5vw, 42px);
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-edge);
+  border-left: 3px solid var(--sky-deep);
+  border-radius: 4px;
+}
+.confidential__icon{
+  flex: none;
+  width: 46px; height: 46px;
+  stroke: var(--sky-deep);
+  stroke-width: 1.6;
+}
+.confidential__copy{ display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.confidential__title{ font-size: clamp(21px, 2.4vw, 27px); color: var(--maroon); }
+.confidential__body{ max-width: 62ch; font-size: 15.5px; line-height: 1.7; color: var(--muted); }
+
+/* =========================================================
    WhatsApp — inline link + floating click-to-chat button
    ========================================================= */
 :root{ --wa: #25D366; --wa-deep: #128C7E; }
@@ -1675,6 +1960,20 @@ a:hover { color: var(--maroon); }
   .terms{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .capacity__inner{ grid-template-columns: 1fr; }
   .structures__grid{ grid-template-columns: 1fr; }
+
+  /* Case studies page */
+  .cases__grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .study__meta{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .study__steps{ grid-template-columns: 1fr; gap: 30px; }
+  .study__line{
+    left: 15px; right: auto; top: 0; bottom: 0;
+    width: 1px; height: auto;
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+  .study.is-visible .study__line,
+  .anatomy .reveal.is-visible .study__line{ transform: scaleY(1); }
+  .confidential__inner{ flex-direction: column; }
 }
 
 @media (max-width: 620px){
@@ -1687,6 +1986,11 @@ a:hover { color: var(--maroon); }
   .btn--ghost{ width: auto; align-self: flex-start; justify-content: flex-start; }
   .card__foot{ flex-direction: column; align-items: flex-start; }
   .footer__top{ flex-direction: column; gap: 24px; }
+
+  /* Case grid drops to a single column on phones */
+  .cases__grid{ grid-template-columns: 1fr; }
+  .study__meta{ grid-template-columns: 1fr; }
+  .study__metrics{ grid-template-columns: 1fr; gap: 24px; }
 
   /* Icon-only circle on phones — hover can't be relied on for the label */
   .wa{ width: 56px; height: 56px; padding: 0; justify-content: center; }
@@ -1731,6 +2035,9 @@ a:hover { color: var(--maroon); }
   .wa{ transform: none; }
 
   .page-hero__mesh{ animation: none; }
+  .study__line{ transform: scaleX(1); }
+  .case-card.is-entering{ animation: none; }
+  .case-card:hover{ transform: none; }
   .slot{ opacity: 1; transform: none; }
   .slot--project{ transform: rotate(45deg); }
   .compare__scroll.is-visible tbody tr{ animation: none; opacity: 1; }

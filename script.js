@@ -160,7 +160,48 @@
   });
 
   /* -------------------------------------------------------
-     7. Lead form — validation, then a drawn success mark
+     7. Case study filters
+     ------------------------------------------------------- */
+  var filters = document.querySelectorAll('.filter');
+  var caseGrid = document.getElementById('caseGrid');
+  var casesEmpty = document.getElementById('casesEmpty');
+
+  if (filters.length && caseGrid) {
+    var caseCards = caseGrid.querySelectorAll('.case-card');
+
+    filters.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var want = btn.dataset.filter;
+
+        filters.forEach(function (other) {
+          var active = other === btn;
+          other.classList.toggle('is-active', active);
+          other.setAttribute('aria-pressed', String(active));
+        });
+
+        var shown = 0;
+        caseCards.forEach(function (card) {
+          var match = want === 'all' || card.dataset.cat === want;
+
+          // Restart the entrance animation for cards coming back in.
+          card.classList.remove('is-entering');
+          if (match) {
+            card.classList.remove('is-filtered');
+            void card.offsetWidth;
+            card.classList.add('is-entering');
+            shown++;
+          } else {
+            card.classList.add('is-filtered');
+          }
+        });
+
+        if (casesEmpty) casesEmpty.hidden = shown > 0;
+      });
+    });
+  }
+
+  /* -------------------------------------------------------
+     8. Lead form — validation, then a drawn success mark
      ------------------------------------------------------- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
