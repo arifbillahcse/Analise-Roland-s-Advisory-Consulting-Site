@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class TestimonialResource extends Resource
@@ -52,7 +53,14 @@ class TestimonialResource extends Resource
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('role')->searchable(),
                 TextColumn::make('quote')->limit(60)->wrap(),
-                IconColumn::make('featured')->boolean(),
+                IconColumn::make('featured')->boolean()->label('In carousel'),
+            ])
+            ->filters([
+                TernaryFilter::make('featured')
+                    ->label('Carousel')
+                    ->placeholder('All testimonials')
+                    ->trueLabel('In the carousel')
+                    ->falseLabel('In the quote grid'),
             ]);
     }
 

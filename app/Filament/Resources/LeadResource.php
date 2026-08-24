@@ -10,7 +10,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -55,13 +54,17 @@ class LeadResource extends Resource
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('company')->searchable()->toggleable(),
                 TextColumn::make('message')->limit(60)->wrap(),
-                BadgeColumn::make('source'),
-                BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => Lead::STATUS_NEW,
-                        'success' => Lead::STATUS_CONTACTED,
-                        'gray' => Lead::STATUS_ARCHIVED,
-                    ]),
+                TextColumn::make('source')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                TextColumn::make('status')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        Lead::STATUS_CONTACTED => 'success',
+                        Lead::STATUS_ARCHIVED => 'gray',
+                        default => 'warning',
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),

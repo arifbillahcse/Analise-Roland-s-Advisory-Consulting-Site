@@ -74,6 +74,80 @@ class LeadSubmissionTest extends TestCase
         Mail::assertNothingQueued();
     }
 
+    public function test_the_honeypot_wins_over_validation_so_a_bot_never_sees_a_422(): void
+    {
+        Mail::fake();
+
+        // A bot that trips the honeypot *and* submits rubbish must get the
+        // same fake success as one that filled the form properly. A 422
+        // here would tell it which field gave it away.
+        $response = $this->postJson(route('leads.store'), $this->payload([
+            'website' => 'https://spam.example',
+            'name' => '',
+            'email' => 'not-an-email',
+            'project' => '',
+        ]));
+
+        $response->assertOk()->assertJson(['success' => true]);
+        $this->assertDatabaseCount('leads', 0);
+        Mail::assertNothingQueued();
+    }
+
+    public function test_a_submission_from_an_unknown_source_page_is_rejected(): void
+    {
+        $this->postJson(route('leads.store'), $this->payload(['source' => 'elsewhere']))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('source');
+
+        $this->assertDatabaseCount('leads', 0);
+    }
+
+    public function test_an_over_long_message_is_rejected(): void
+    {
+        $this->postJson(route('leads.store'), $this->payload(['project' => str_repeat('a', 4001)]))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('project');
+    }
+
+    public function test_a_blank_company_is_stored_as_null_rather_than_an_empty_string(): void
+    {
+        Mail::fake();
+
+        $this->post(route('leads.store'), $this->payload(['company' => '']))->assertRedirect();
+
+        $this->assertNull(Lead::first()->company);
+    }
+
+    public function test_a_failed_no_js_submission_comes_back_with_errors_and_the_typed_input(): void
+    {
+        // The plain-HTML path: no Accept: application/json, so Laravel
+        // redirects back rather than returning 422. The form has to render
+        // the message and repopulate what was already typed.
+        $this->from(route('contact'))
+            ->post(route('leads.store'), $this->payload(['email' => '']))
+            ->assertRedirect(route('contact').'#book')
+            ->assertSessionHasErrors('email');
+
+        $response = $this->from(route('contact'))
+            ->followingRedirects()
+            ->post(route('leads.store'), $this->payload(['email' => '']));
+
+        $response->assertOk();
+        $response->assertSee('Jordan Rivers', false);      // name survived
+        $response->assertSee('We need help scoping a re-platform.', false);
+        $response->assertSee('has-error', false);
+    }
+
+    public function test_a_successful_no_js_submission_lands_back_on_the_form(): void
+    {
+        Mail::fake();
+
+        $this->from(route('contact'))
+            ->post(route('leads.store'), $this->payload())
+            ->assertRedirect(route('contact').'#book')
+            ->assertSessionHas('lead_sent', true);
+    }
+
     public function test_submissions_are_rate_limited_per_ip(): void
     {
         Mail::fake();

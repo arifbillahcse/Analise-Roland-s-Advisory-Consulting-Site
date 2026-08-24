@@ -11,17 +11,18 @@ class AdminUserSeeder extends Seeder
     /**
      * Create (or update) the one admin account the client logs in with.
      *
-     * Reads ADMIN_EMAIL / ADMIN_PASSWORD from .env so no credential is
-     * committed to the repository. Safe to re-run: it updates the password
-     * of the existing account rather than creating a duplicate.
+     * Reads ADMIN_EMAIL / ADMIN_PASSWORD from .env (through config/site.php,
+     * so it keeps working once a deployment has run `config:cache`) — no
+     * credential is committed to the repository. Safe to re-run: it updates
+     * the password of the existing account rather than creating a duplicate.
      */
     public function run(): void
     {
-        $email = env('ADMIN_EMAIL');
-        $password = env('ADMIN_PASSWORD');
+        $email = config('site.admin.email');
+        $password = config('site.admin.password');
 
         if (! $email || ! $password) {
-            $this->command->warn(
+            $this->command?->warn(
                 'Skipped: set ADMIN_EMAIL and ADMIN_PASSWORD in .env before running this seeder.'
             );
 
@@ -31,12 +32,12 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => $email],
             [
-                'name' => 'Analise Roland',
+                'name' => config('site.admin.name'),
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
             ]
         );
 
-        $this->command->info("Admin account ready: {$email}");
+        $this->command?->info("Admin account ready: {$email}");
     }
 }

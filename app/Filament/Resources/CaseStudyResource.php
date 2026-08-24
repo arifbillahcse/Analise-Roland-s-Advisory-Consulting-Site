@@ -9,7 +9,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -69,7 +68,8 @@ class CaseStudyResource extends Resource
             ->columns([
                 TextColumn::make('title')->searchable()->limit(50),
                 TextColumn::make('sector')->searchable()->toggleable(),
-                BadgeColumn::make('category')
+                TextColumn::make('category')
+                    ->badge()
                     ->formatStateUsing(fn (string $state): string => CaseStudy::CATEGORIES[$state] ?? $state),
                 TextColumn::make('year_range')->label('Year'),
                 TextColumn::make('duration'),

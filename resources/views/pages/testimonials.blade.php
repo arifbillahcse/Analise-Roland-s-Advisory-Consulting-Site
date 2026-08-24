@@ -90,6 +90,9 @@
   </section>
 
   <!-- ================= QUOTE GRID ================= -->
+  {{-- Skipped entirely when every testimonial is in the carousel, so the
+       heading never sits above an empty grid. --}}
+  @if ($regularTestimonials->isNotEmpty())
   <section class="voices">
     <div class="wrap">
       <header class="section-head reveal">
@@ -115,6 +118,7 @@
       </div>
     </div>
   </section>
+  @endif
 
   <!-- ================= PRIVATE REFERENCES ================= -->
   <section class="references reveal">

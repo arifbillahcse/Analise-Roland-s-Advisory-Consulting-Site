@@ -500,7 +500,9 @@
   </section>
 
   <!-- ================= CONTACT ================= -->
-  <section class="contact">
+  {{-- id="book" matches the contact page's form section: a no-JS submit
+       redirects back to #book, so the visitor lands on the form either way. --}}
+  <section class="contact" id="book">
     <div class="wrap">
       <div class="contact__panel reveal">
 
@@ -545,31 +547,40 @@
               <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
             </div>
 
-            <div class="field">
-              <input type="text" id="name" name="name" placeholder=" " autocomplete="name" required>
+            {{-- The no-JavaScript path: the browser posts normally, Laravel
+                 redirects back with the errors, and the directives below
+                 render them and repopulate what was typed instead of the
+                 form coming back blank. With JS on, script.js fills the
+                 same slots from the JSON response. --}}
+            <div class="field @error('name') has-error @enderror">
+              <input type="text" id="name" name="name" placeholder=" " autocomplete="name" required
+                     value="{{ old('name') }}" @error('name') aria-invalid="true" @enderror>
               <label for="name">Name</label>
               <span class="field__underline" aria-hidden="true"></span>
-              <p class="field__error" data-error-for="name"></p>
+              <p class="field__error" data-error-for="name">@error('name'){{ $message }}@enderror</p>
             </div>
 
-            <div class="field">
-              <input type="email" id="email" name="email" placeholder=" " autocomplete="email" required>
+            <div class="field @error('email') has-error @enderror">
+              <input type="email" id="email" name="email" placeholder=" " autocomplete="email" required
+                     value="{{ old('email') }}" @error('email') aria-invalid="true" @enderror>
               <label for="email">Email</label>
               <span class="field__underline" aria-hidden="true"></span>
-              <p class="field__error" data-error-for="email"></p>
+              <p class="field__error" data-error-for="email">@error('email'){{ $message }}@enderror</p>
             </div>
 
-            <div class="field">
-              <input type="text" id="company" name="company" placeholder=" " autocomplete="organization">
+            <div class="field @error('company') has-error @enderror">
+              <input type="text" id="company" name="company" placeholder=" " autocomplete="organization"
+                     value="{{ old('company') }}">
               <label for="company">Company <span class="opt">(optional)</span></label>
               <span class="field__underline" aria-hidden="true"></span>
             </div>
 
-            <div class="field">
-              <textarea id="project" name="project" rows="3" placeholder=" " required></textarea>
+            <div class="field @error('project') has-error @enderror">
+              <textarea id="project" name="project" rows="3" placeholder=" " required
+                        @error('project') aria-invalid="true" @enderror>{{ old('project') }}</textarea>
               <label for="project">What are you building?</label>
               <span class="field__underline" aria-hidden="true"></span>
-              <p class="field__error" data-error-for="project"></p>
+              <p class="field__error" data-error-for="project">@error('project'){{ $message }}@enderror</p>
             </div>
 
             <button class="btn btn--solid btn--block" type="submit">
@@ -583,7 +594,8 @@
               Your details go straight to Analise. No list, no newsletter.
             </p>
 
-            <p class="form__servererror" id="formServerError" role="alert" hidden></p>
+            <p class="form__servererror" id="formServerError" role="alert"
+               @unless ($errors->has('source')) hidden @endunless>@error('source'){{ $message }}@enderror</p>
           </form>
 
           <div class="form-success" id="formSuccess" @unless (session('lead_sent')) hidden @endunless>

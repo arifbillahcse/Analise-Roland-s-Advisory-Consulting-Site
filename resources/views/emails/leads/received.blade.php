@@ -12,7 +12,9 @@
 
 {{ $lead->message }}
 
-<x-mail::button :url="url('/admin/leads/'.$lead->id)">
+{{-- The panel is named explicitly: this renders from a queued job, which has
+     no request to infer the current Filament panel from. --}}
+<x-mail::button :url="\App\Filament\Resources\LeadResource::getUrl('edit', ['record' => $lead], panel: 'admin')">
 View in admin
 </x-mail::button>
 
