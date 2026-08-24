@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
@@ -15,6 +16,8 @@ use Tests\TestCase;
  */
 class PageTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @return array<string, array{string, string}>
      */

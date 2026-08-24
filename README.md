@@ -59,17 +59,26 @@ resources/views/
   emails/leads/*.blade.php         admin notification + lead autoresponder
 public/css/styles.css              unchanged from the static site, +1 rule
 public/js/script.js                lead form now posts to the server for real
-app/Models/{User,Lead}.php
+app/Models/{User,Lead,Testimonial,CaseStudy}.php
+app/Http/Controllers/PageController.php         testimonials + case studies
 app/Http/Controllers/LeadController.php
 app/Http/Requests/StoreLeadRequest.php
 app/Mail/{NewLeadReceived,LeadAutoresponder}.php
 app/Providers/Filament/AdminPanelProvider.php   registers the /admin panel
-app/Filament/Resources/LeadResource.php         the leads inbox UI
-database/migrations/                            users, leads
-database/seeders/AdminUserSeeder.php            creates the one admin login
+app/Filament/Resources/
+  LeadResource.php                the leads inbox UI
+  TestimonialResource.php         carousel + quote grid content
+  CaseStudyResource.php           the case studies grid content
+database/migrations/                users, leads, testimonials, case_studies
+database/seeders/
+  AdminUserSeeder.php              creates the one admin login
+  TestimonialSeeder.php           sample carousel + grid quotes
+  CaseStudySeeder.php             sample case study cards
 tests/Feature/PageTest.php              smoke tests: every page renders, 200s
 tests/Feature/LeadSubmissionTest.php    lead form: happy path, validation,
                                          honeypot, rate limiting
+tests/Feature/ContentPagesTest.php      testimonials/case studies render
+                                         from the database, empty states 200
 ```
 
 ### How a page supplies its own metadata
@@ -128,14 +137,36 @@ php artisan config:publish mail   # or name it
 ## Admin panel
 
 Filament, at `/admin`. Log in with the `ADMIN_EMAIL` / `ADMIN_PASSWORD` you
-seeded (see "Local setup"). Right now it has one resource: **Leads** — every
-contact-form submission, newest first, filterable by status and source page.
-Opening a lead lets you move it from New → Contacted → Archived; nothing else
-on it is editable, since it's a record of what the person submitted.
+seeded (see "Local setup"). Three resources:
+
+- **Leads** — every contact-form submission, newest first, filterable by
+  status and source page. Opening one lets you move it from New →
+  Contacted → Archived; nothing else on it is editable, since it's a record
+  of what the person submitted.
+- **Testimonials** — the quotes on the testimonials page. The "Show in the
+  featured carousel" toggle decides whether one appears at the top of the
+  page (as a large slide) or in the quote grid below. Rows are
+  drag-to-reorder in the table, which controls the order they render in.
+- **Case Studies** — the cards on the case studies page, with the category
+  that drives the filter buttons (Advisory Retainer / Custom Project /
+  Institutional), and are likewise drag-to-reorder.
 
 To change the admin password later, update `ADMIN_PASSWORD` in `.env` and
 re-run `php artisan db:seed` — the seeder updates the existing account rather
-than creating a second one.
+than creating a second one. That same command seeds a starter set of sample
+testimonials and case studies the first time it runs (skipped on later runs
+if either table already has rows), so the pages aren't empty before the
+client has added real content. Both pages still carry a "Sample content —
+replace before launch" banner in the markup; that's a static reminder, not
+something the seeder or admin panel toggles off — remove it by hand once
+real content is in.
+
+Pricing (the `services` page) is intentionally **not** database-backed. It's
+two fixed offerings (Advisory Retainer, Custom Project) described in full
+prose — panels, a terms list, a comparison table — not a repeatable card
+that a "pricing tier" model would meaningfully represent. Changing the
+wording or the `$20,000 base` figure is a copy edit to
+`resources/views/pages/services.blade.php`.
 
 ## Lead form
 
@@ -177,18 +208,22 @@ submission with missing fields is rejected with 422s, the honeypot silently
 drops the submission without saving it or sending mail, and a sixth
 submission within an hour from the same IP is throttled.
 
+`tests/Feature/ContentPagesTest.php` covers: a featured testimonial renders
+in the carousel and a non-featured one in the grid, both pages still return
+200 with zero rows in their table, and a case study's category drives both
+its `data-cat` filter attribute and its tag styling.
+
 These use an in-memory SQLite database (`phpunit.xml` sets `DB_CONNECTION`),
 so they don't touch whatever's in `.env` — but your PHP build needs the
 `pdo_sqlite` extension enabled for that to work.
 
 ## What is not done yet
 
-Phases 1 (admin panel + auth) and 2 (lead form backend, above) from the
-architecture plan (`Analise-Roland-Laravel-Server-Architecture-Plan.docx`)
-are done. Still outstanding:
+Phases 1 (admin panel + auth), 2 (lead form backend), and 3 (database-backed
+testimonials and case studies) from the architecture plan
+(`Analise-Roland-Laravel-Server-Architecture-Plan.docx`) are done. Still
+outstanding:
 
-- **Database-backed content.** Testimonials, case studies, and pricing tiers
-  are still hard-coded in the views — the admin panel can't edit them yet.
 - **Gated pricing pages** via signed, expiring URLs.
 - **Real contact details.** `hello@analiseroland.com`, `[City, State]`, the
   WhatsApp number, and the case-study copy are all still placeholders.

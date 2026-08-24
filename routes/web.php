@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'pages.home')->name('home');
 Route::view('/services', 'pages.services')->name('services');
-Route::view('/case-studies', 'pages.case-studies')->name('case-studies');
-Route::view('/testimonials', 'pages.testimonials')->name('testimonials');
+Route::get('/case-studies', [PageController::class, 'caseStudies'])->name('case-studies');
+Route::get('/testimonials', [PageController::class, 'testimonials'])->name('testimonials');
 Route::view('/contact', 'pages.contact')->name('contact');
 
 Route::post('/leads', [LeadController::class, 'store'])
