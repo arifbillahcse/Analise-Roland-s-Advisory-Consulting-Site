@@ -537,7 +537,14 @@
         </div>
 
         <div class="contact__formwrap">
-          <form class="form" id="leadForm" novalidate>
+          <form class="form" id="leadForm" novalidate method="POST" action="{{ route('leads.store') }}" @if (session('lead_sent')) hidden @endif>
+            @csrf
+            <input type="hidden" name="source" value="home">
+            <div style="position:absolute; left:-9999px;" aria-hidden="true" tabindex="-1">
+              <label for="website">Leave this field blank</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
             <div class="field">
               <input type="text" id="name" name="name" placeholder=" " autocomplete="name" required>
               <label for="name">Name</label>
@@ -575,9 +582,11 @@
             <p class="form__fineprint">
               Your details go straight to Analise. No list, no newsletter.
             </p>
+
+            <p class="form__servererror" id="formServerError" role="alert" hidden></p>
           </form>
 
-          <div class="form-success" id="formSuccess" hidden>
+          <div class="form-success" id="formSuccess" @unless (session('lead_sent')) hidden @endunless>
             <svg class="success-mark" viewBox="0 0 64 64" aria-hidden="true">
               <circle class="success-mark__circle" pathLength="1" cx="32" cy="32" r="27" />
               <path class="success-mark__check" pathLength="1" d="M19 33.5l9 9 17-19" />

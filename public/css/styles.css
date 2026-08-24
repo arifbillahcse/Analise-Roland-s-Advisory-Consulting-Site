@@ -1145,6 +1145,13 @@ a:hover { color: var(--maroon); }
 
 .form__fineprint{ font-size: 12.5px; color: var(--muted); text-align: center; }
 
+.form__servererror{
+  margin-top: 10px;
+  font-size: 13px;
+  color: #A32B34;
+  text-align: center;
+}
+
 /* ---------- Success state ---------- */
 .form-success{
   display: flex;

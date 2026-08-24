@@ -271,6 +271,7 @@
      ------------------------------------------------------- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
+  var serverError = document.getElementById('formServerError');
 
   var MESSAGES = {
     name:    'Please add your name.',
@@ -334,19 +335,67 @@
         return;
       }
 
-      /* DEMO ONLY — no backend is wired up.
-         Point this at Formspree, Gravity Forms, or her CRM
-         endpoint when the site goes live. */
-      form.hidden = true;
-      success.hidden = false;
+      if (serverError) serverError.hidden = true;
 
-      requestAnimationFrame(function () {
-        success.classList.add('is-drawn');
-      });
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
 
-      success.setAttribute('role', 'status');
-      success.setAttribute('tabindex', '-1');
-      success.focus({ preventScroll: true });
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (response) {
+          if (response.ok) {
+            showSuccess();
+            return;
+          }
+          if (response.status === 422) {
+            return response.json().then(showValidationErrors);
+          }
+          throw new Error('Unexpected response: ' + response.status);
+        })
+        .catch(function () {
+          if (serverError) {
+            serverError.textContent = 'Something went wrong sending that — please try again, or email hello@analiseroland.com directly.';
+            serverError.hidden = false;
+          }
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+        });
+
+      function showSuccess() {
+        form.hidden = true;
+        success.hidden = false;
+
+        requestAnimationFrame(function () {
+          success.classList.add('is-drawn');
+        });
+
+        success.setAttribute('role', 'status');
+        success.setAttribute('tabindex', '-1');
+        success.focus({ preventScroll: true });
+      }
+
+      function showValidationErrors(payload) {
+        var errors = (payload && payload.errors) || {};
+        var firstInvalid = null;
+
+        Object.keys(errors).forEach(function (field) {
+          var input = form.querySelector('[name="' + field + '"]');
+          if (!input) return;
+          setError(input, errors[field][0]);
+          if (!firstInvalid) firstInvalid = input;
+        });
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+        } else if (serverError) {
+          serverError.textContent = 'Please check the form and try again.';
+          serverError.hidden = false;
+        }
+      }
     });
   }
 
