@@ -20,6 +20,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Lead notifications
+    |--------------------------------------------------------------------------
+    |
+    | Where a copy of every contact-form submission is sent.
+    |
+    */
+
+    'admin_email' => env('SITE_ADMIN_EMAIL', 'hello@analiseroland.com'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin login
+    |--------------------------------------------------------------------------
+    |
+    | The one /admin account, created by `php artisan db:seed`. These live
+    | here rather than being read with env() inside the seeder: once a
+    | deployment runs `php artisan config:cache`, env() outside a config file
+    | returns null, and the seeder would silently skip itself.
+    |
+    */
+
+    'admin' => [
+        'email' => env('ADMIN_EMAIL'),
+        'password' => env('ADMIN_PASSWORD'),
+        'name' => env('ADMIN_NAME', 'Analise Roland'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Primary navigation
     |--------------------------------------------------------------------------
     |

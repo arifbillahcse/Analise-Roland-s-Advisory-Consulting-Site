@@ -230,6 +230,9 @@
 
     function start() {
       if (reduceMotion) return;
+      // The slides come from the database now, so one featured testimonial
+      // is a real state. Nothing to advance to — don't run the timer.
+      if (slides.length < 2) return;
       stop();
       timer = setInterval(function () { show(current + 1); }, SLIDE_MS);
     }
@@ -245,15 +248,19 @@
     });
 
     // Pause while someone is reading or tabbing through.
+    function activeDot() { return carousel.querySelector('.dot.is-active'); }
+
     ['mouseenter', 'focusin'].forEach(function (evt) {
       carousel.addEventListener(evt, function () {
         stop();
-        carousel.querySelector('.dot.is-active').classList.add('is-paused');
+        var dot = activeDot();
+        if (dot) dot.classList.add('is-paused');
       });
     });
     ['mouseleave', 'focusout'].forEach(function (evt) {
       carousel.addEventListener(evt, function () {
-        carousel.querySelector('.dot.is-active').classList.remove('is-paused');
+        var dot = activeDot();
+        if (dot) dot.classList.remove('is-paused');
         start();
       });
     });
@@ -271,6 +278,7 @@
      ------------------------------------------------------- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
+  var serverError = document.getElementById('formServerError');
 
   var MESSAGES = {
     name:    'Please add your name.',
@@ -282,10 +290,22 @@
 
   function setError(input, message) {
     var field = fieldOf(input);
+    // Not every input the server can complain about is wrapped in a .field
+    // — the hidden "source" input isn't. Fall back to the shared banner
+    // rather than throwing on a null wrapper.
+    if (!field) return false;
+
     var slot = field.querySelector('[data-error-for="' + input.id + '"]');
     if (slot) slot.textContent = message || '';
     field.classList.toggle('has-error', Boolean(message));
     input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    return true;
+  }
+
+  function showBanner(message) {
+    if (!serverError) return;
+    serverError.textContent = message;
+    serverError.hidden = false;
   }
 
   function validate(input) {
@@ -334,19 +354,79 @@
         return;
       }
 
-      /* DEMO ONLY — no backend is wired up.
-         Point this at Formspree, Gravity Forms, or her CRM
-         endpoint when the site goes live. */
-      form.hidden = true;
-      success.hidden = false;
+      if (serverError) serverError.hidden = true;
 
-      requestAnimationFrame(function () {
-        success.classList.add('is-drawn');
-      });
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
 
-      success.setAttribute('role', 'status');
-      success.setAttribute('tabindex', '-1');
-      success.focus({ preventScroll: true });
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(function (response) {
+          if (response.ok) {
+            showSuccess();
+            return;
+          }
+          if (response.status === 422) {
+            return response.json().then(showValidationErrors);
+          }
+          if (response.status === 429) {
+            // Rate limiter: 5 submissions an hour from one address.
+            showBanner('You’ve sent this a few times already. Give it an hour, or email hello@analiseroland.com directly.');
+            return;
+          }
+          if (response.status === 419) {
+            // Session/CSRF token expired — the page has been open a while.
+            showBanner('This page has been open a while and the form expired. Please refresh and send it again.');
+            return;
+          }
+          throw new Error('Unexpected response: ' + response.status);
+        })
+        .catch(function () {
+          showBanner('Something went wrong sending that — please try again, or email hello@analiseroland.com directly.');
+        })
+        .finally(function () {
+          if (submitBtn) submitBtn.disabled = false;
+        });
+
+      function showSuccess() {
+        form.hidden = true;
+        success.hidden = false;
+
+        requestAnimationFrame(function () {
+          success.classList.add('is-drawn');
+        });
+
+        success.setAttribute('role', 'status');
+        success.setAttribute('tabindex', '-1');
+        success.focus({ preventScroll: true });
+      }
+
+      function showValidationErrors(payload) {
+        var errors = (payload && payload.errors) || {};
+        var firstInvalid = null;
+        var unplaced = [];
+
+        Object.keys(errors).forEach(function (field) {
+          var input = form.querySelector('[name="' + field + '"]');
+          if (input && setError(input, errors[field][0])) {
+            if (!firstInvalid) firstInvalid = input;
+          } else {
+            // No visible field to hang it on (e.g. the hidden "source").
+            unplaced.push(errors[field][0]);
+          }
+        });
+
+        if (unplaced.length) showBanner(unplaced.join(' '));
+
+        if (firstInvalid) {
+          firstInvalid.focus();
+        } else if (!unplaced.length) {
+          showBanner('Please check the form and try again.');
+        }
+      }
     });
   }
 

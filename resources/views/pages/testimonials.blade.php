@@ -50,80 +50,49 @@
         </p>
       </aside>
 
+      @if ($featuredTestimonials->isNotEmpty())
       <div class="carousel reveal" id="carousel" aria-roledescription="carousel"
            aria-label="Featured testimonials">
         <div class="carousel__main">
         <div class="carousel__track" aria-live="polite">
 
-          <figure class="slide is-active" data-slide="0">
-            <svg class="quote" viewBox="0 0 44 32" aria-hidden="true">
-              <path class="draw" pathLength="1" d="M18 2C8 5 3 12 3 22v8h15V16H10c0-6 3-10 9-12z" />
-              <path class="draw draw--d2" pathLength="1" d="M41 2c-10 3-15 10-15 20v8h15V16h-8c0-6 3-10 9-12z" />
-            </svg>
-            <blockquote>
-              <p>She made us say the hard thing out loud, then made us say it in one sentence. Six
-                 months later that sentence is our homepage. I'd worked with three other advisors
-                 before her and none of them got us there.</p>
-            </blockquote>
-          </figure>
-
-          <figure class="slide" data-slide="1" hidden>
-            <svg class="quote" viewBox="0 0 44 32" aria-hidden="true">
-              <path class="draw" pathLength="1" d="M18 2C8 5 3 12 3 22v8h15V16H10c0-6 3-10 9-12z" />
-              <path class="draw draw--d2" pathLength="1" d="M41 2c-10 3-15 10-15 20v8h15V16h-8c0-6 3-10 9-12z" />
-            </svg>
-            <blockquote>
-              <p>We needed something the committee could actually approve, not a recommendation
-                 we'd have to defend line by line. Analise wrote the framework, sat through the
-                 questions, and it passed unanimously the first time.</p>
-            </blockquote>
-          </figure>
-
-          <figure class="slide" data-slide="2" hidden>
-            <svg class="quote" viewBox="0 0 44 32" aria-hidden="true">
-              <path class="draw" pathLength="1" d="M18 2C8 5 3 12 3 22v8h15V16H10c0-6 3-10 9-12z" />
-              <path class="draw draw--d2" pathLength="1" d="M41 2c-10 3-15 10-15 20v8h15V16h-8c0-6 3-10 9-12z" />
-            </svg>
-            <blockquote>
-              <p>I've hired a lot of people. Analise is the only one who told me which of my roles
-                 shouldn't exist before she started filling them. We broke ground on schedule
-                 because of it.</p>
-            </blockquote>
-          </figure>
+          @foreach ($featuredTestimonials as $testimonial)
+            <figure class="slide @if ($loop->first) is-active @endif" data-slide="{{ $loop->index }}" @unless ($loop->first) hidden @endunless>
+              <svg class="quote" viewBox="0 0 44 32" aria-hidden="true">
+                <path class="draw" pathLength="1" d="M18 2C8 5 3 12 3 22v8h15V16H10c0-6 3-10 9-12z" />
+                <path class="draw draw--d2" pathLength="1" d="M41 2c-10 3-15 10-15 20v8h15V16h-8c0-6 3-10 9-12z" />
+              </svg>
+              <blockquote>
+                <p>{{ $testimonial->quote }}</p>
+              </blockquote>
+            </figure>
+          @endforeach
 
         </div>
 
         </div>
 
         <div class="carousel__nav" role="tablist" aria-label="Choose a testimonial">
-          <button class="dot is-active" type="button" role="tab" aria-selected="true" data-goto="0">
-            <span class="dot__meta">
-              <span class="dot__name">Founder &amp; CEO</span>
-              <span class="dot__role">Consumer fintech · Seed to Series A</span>
-            </span>
-            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
-          </button>
-          <button class="dot" type="button" role="tab" aria-selected="false" data-goto="1">
-            <span class="dot__meta">
-              <span class="dot__name">Director of Investments</span>
-              <span class="dot__role">University endowment program</span>
-            </span>
-            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
-          </button>
-          <button class="dot" type="button" role="tab" aria-selected="false" data-goto="2">
-            <span class="dot__meta">
-              <span class="dot__name">Managing Partner</span>
-              <span class="dot__role">Real estate development</span>
-            </span>
-            <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
-          </button>
+          @foreach ($featuredTestimonials as $testimonial)
+            <button class="dot @if ($loop->first) is-active @endif" type="button" role="tab" aria-selected="{{ $loop->first ? 'true' : 'false' }}" data-goto="{{ $loop->index }}">
+              <span class="dot__meta">
+                <span class="dot__name">{{ $testimonial->name }}</span>
+                <span class="dot__role">{{ $testimonial->role }}</span>
+              </span>
+              <span class="dot__track" aria-hidden="true"><span class="dot__fill"></span></span>
+            </button>
+          @endforeach
         </div>
       </div>
+      @endif
 
     </div>
   </section>
 
   <!-- ================= QUOTE GRID ================= -->
+  {{-- Skipped entirely when every testimonial is in the carousel, so the
+       heading never sits above an empty grid. --}}
+  @if ($regularTestimonials->isNotEmpty())
   <section class="voices">
     <div class="wrap">
       <header class="section-head reveal">
@@ -136,63 +105,20 @@
 
       <div class="voices__grid">
 
-        <figure class="voice reveal" data-delay="0">
-          <blockquote><p>The 72-hour rule sounds like a small thing until you're in the middle of
-            something and someone actually answers.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Co-founder</span>
-            <span class="voice__role">Climate hardware · Series A</span>
-          </figcaption>
-        </figure>
-
-        <figure class="voice reveal" data-delay="90">
-          <blockquote><p>She's the rare advisor who has actually run something. You can tell inside
-            ten minutes, and it changes what you're willing to ask her.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Chief Executive</span>
-            <span class="voice__role">DTC wellness</span>
-          </figcaption>
-        </figure>
-
-        <figure class="voice reveal" data-delay="180">
-          <blockquote><p>Half of what I was paying for was the network. The other half was her
-            telling me not to use it yet.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Founder</span>
-            <span class="voice__role">Marketplace startup</span>
-          </figcaption>
-        </figure>
-
-        <figure class="voice reveal" data-delay="0">
-          <blockquote><p>Our first venture program could have been an expensive education. She made
-            it a process instead.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Principal</span>
-            <span class="voice__role">Single-family office</span>
-          </figcaption>
-        </figure>
-
-        <figure class="voice reveal" data-delay="90">
-          <blockquote><p>She is kind about people and ruthless about ideas. That combination is
-            harder to find than it sounds.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Founder &amp; CEO</span>
-            <span class="voice__role">B2B software</span>
-          </figcaption>
-        </figure>
-
-        <figure class="voice reveal" data-delay="180">
-          <blockquote><p>Six months in, our board meetings got boring. That was the whole
-            goal.</p></blockquote>
-          <figcaption>
-            <span class="voice__name">Founder</span>
-            <span class="voice__role">Consumer fintech</span>
-          </figcaption>
-        </figure>
+        @foreach ($regularTestimonials as $testimonial)
+          <figure class="voice reveal" data-delay="{{ ($loop->index % 3) * 90 }}">
+            <blockquote><p>{{ $testimonial->quote }}</p></blockquote>
+            <figcaption>
+              <span class="voice__name">{{ $testimonial->name }}</span>
+              <span class="voice__role">{{ $testimonial->role }}</span>
+            </figcaption>
+          </figure>
+        @endforeach
 
       </div>
     </div>
   </section>
+  @endif
 
   <!-- ================= PRIVATE REFERENCES ================= -->
   <section class="references reveal">
